@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wazi 記帳系統</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; width: 100%; position: relative; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 10px; -webkit-text-size-adjust: 100%; }
+        .container { max-width: 1200px; margin: 0 auto; width: 100%; overflow-x: hidden; padding: 5px; }
+        
+        /* 登入介面 */
+        .login-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .login-card { background: white; border-radius: 15px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-width: 400px; width: 100%; text-align: center; }
+        .login-card h1 { color: #333; margin-bottom: 10px; font-size: 2em; }
+        .login-card input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 20px; text-align: center; }
+        .login-card button { width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        
+        #mainScreen { display: none; }
+        .header { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { color: #333; font-size: 1.4em; margin: 0; }
+        .logout-btn { padding: 8px 15px; background: #ff6b6b; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em; }
+        
+        /* 導覽列 */
+        .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+        .tab-btn { padding: 10px 5px; background: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: #666; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 0.85em; }
+        .tab-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        
+        /* 內容區 */
+        .content { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); min-height: 60vh; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        h2, h3, h4 { text-align: center; margin-bottom: 15px; color: #333; }
+        .form-group { margin-bottom: 15px; text-align: center; }
+        .form-group label { display: block; margin-bottom: 5px; color: #666; font-weight: bold; font-size: 0.9em; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-size: 16px; text-align: center; }
+        
+        .card { background: #f9f9f9; border-radius: 10px; padding: 15px; border-left: 4px solid #667eea; margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; text-align: center; display: inline-block; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-success { background: #51cf66; color: white; }
+        .btn-danger { background: #ff6b6b; color: white; }
+        .btn-secondary { background: #f0f0f0; color: #333; }
+        .btn-sm { padding: 5px 10px; font-size: 0.8em; }
+        
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        table th { background: #667eea; color: white; padding: 10px; font-size: 0.9em; }
+        table td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 0.9em; }
+        
+        /* 概況卡片 */
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 10px; }
+        .stat-card h4 { font-size: 0.8em; opacity: 0.8; margin-bottom: 5px; color: white; }
+        .stat-card .value { font-size: 1.4em; font-weight: bold; }
+        
+        /* 現金輸入 */
+        .cash-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .cash-input-group { background: #f9f9f9; padding: 10px; border-radius: 8px; text-align: center; }
+        .cash-input-group label { display: block; font-size: 0.8em; color: #888; margin-bottom: 5px; }
+        .cash-input-group input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; text-align: center; font-size: 16px; }
+        
+        /* 摺疊面板 */
+        .collapse-btn { width: 100%; text-align: left; padding: 12px; background: #f8f9fa; border: 1px solid #eee; border-radius: 8px; margin-bottom: 5px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .collapse-content { display: none; padding: 15px; border: 1px solid #eee; border-top: none; border-radius: 0 0 8px 8px; margin-bottom: 10px; background: white; }
+        .collapse-content.active { display: block; }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr 1fr; }
+            input, select, textarea { font-size: 16px !important; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loginScreen" class="login-container" style="display: none;">
+        <div class="login-card">
+            <h1>🍞 Wazi</h1>
+            <p style="color:#666; margin-bottom:20px;">早餐店記帳系統</p>
+            <input type="password" id="passwordInput" placeholder="請輸入密碼" inputmode="decimal" autofocus onkeydown="if(event.key==='Enter') login()">
+            <button onclick="login()">登入</button>
+        </div>
+    </div>
+
+    <div id="mainScreen" class="container" style="display: block;">
+        <div class="header">
+            <h1>🍞 記帳系統</h1>
+            <button class="logout-btn" onclick="logout()">登出</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn" onclick="switchTab('dashboard')">概況</button>
+            <button class="tab-btn active" onclick="switchTab('daily-log')">每日記帳</button>
+            <button class="tab-btn" onclick="switchTab('reconciliation')">廠商對帳</button>
+            <button class="tab-btn" onclick="switchTab('monthly')">月結算</button>
+            <button class="tab-btn" onclick="switchTab('reports')">報表中心</button>
+            <button class="tab-btn" onclick="switchTab('settings')">系統設定</button>
+        </div>
+
+        <div class="content">
+            <!-- 概況 -->
+            <div id="dashboard" class="tab-content">
+                <h3>📊 本月概況</h3>
+                <div id="statsGrid" class="grid"></div>
+            </div>
+
+            <!-- 每日記帳 -->
+            <div id="daily-log" class="tab-content active">
+                <h3>📝 每日記帳</h3>
+                <div class="form-group">
+                    <input type="date" id="logDate" onchange="loadDailyLog()">
+                </div>
+
+                <div class="card" style="border-left-color:#51cf66;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        <h4 style="margin:0;">💰 現金收入</h4>
+                        <button class="btn btn-secondary btn-sm" onclick="toggleDirectCash()">切換模式</button>
+                    </div>
+                    <div id="cashInputContainer" data-mode="count">
+                        <div class="cash-input-grid">
+                            <div class="cash-input-group"><label>千鈔</label><input type="number" step="any" id="cash1000" placeholder="張" inputmode="decimal"></div>
+                            <div class="cash-input-group"><label>百鈔</label><input type="number" step="any" id="cash100" placeholder="張" inputmode="decimal"></div>
+                        </div>
+                        <div class="cash-input-grid" style="grid-template-columns: repeat(3, 1fr);">
+                            <div class="cash-input-group"><label>50元</label><input type="number" step="any" id="cash50" placeholder="枚" inputmode="decimal"></div>
+                            <div class="cash-input-group"><label>10元</label><input type="number" step="any" id="cash10" placeholder="枚/金" inputmode="decimal"></div>
+                            <div class="cash-input-group"><label>5元</label><input type="number" step="any" id="cash5" placeholder="枚/金" inputmode="decimal"></div>
+                        </div>
+                    </div>
+                    <div style="text-align:center; font-weight:bold; color:#51cf66; margin-top:10px;">現金小計: <span id="cashTotal">NT$ 0</span></div>
+                </div>
+
+                <div class="grid">
+                    <div class="card" style="border-left-color:#667eea; padding:10px;">
+                        <h4 style="font-size:0.9em;margin-bottom:5px;">📱 網路支付</h4>
+                        <input type="number" step="any" id="onlineAmount" placeholder="金額" inputmode="decimal" style="width:100%;">
+                        <div style="font-size:0.8em;text-align:center;margin-top:5px;color:#667eea;">實收: <span id="onlineActual">0</span></div>
+                    </div>
+                    <div class="card" style="border-left-color:#667eea; padding:10px;">
+                        <h4 style="font-size:0.9em;margin-bottom:5px;">📸 掃碼支付</h4>
+                        <input type="number" step="any" id="scanAmount" placeholder="金額" inputmode="decimal" style="width:100%;">
+                        <div style="font-size:0.8em;text-align:center;margin-top:5px;color:#667eea;">實收: <span id="scanActual">0</span></div>
+                    </div>
+                </div>
+
+                <div class="stat-card" id="dailyNetProfitCard" style="background:linear-gradient(135deg, #51cf66 0%, #2d6a4f 100%);">
+                    <h4>今日淨營業額 (扣除零用金)</h4>
+                    <div class="value" id="dailyTotal">NT$ 0</div>
+                </div>
+
+                <h4 style="margin-top:20px;">📦 廠商進貨</h4>
+                <div id="vendorPurchasesContainer" class="grid"></div>
+
+                <h4 style="margin-top:20px;">🖍️ 雜支記錄</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; margin-bottom: 15px;">
+                    <input type="text" id="miscName" placeholder="項目" style="width: 100%; max-width: 400px;">
+                    <input type="number" step="any" id="miscAmount" placeholder="金額" inputmode="decimal" style="width: 100%; max-width: 400px;">
+                    <button class="btn btn-secondary btn-sm" onclick="addMiscellaneous()" style="width: 100%; max-width: 400px;">+ 新增雜支</button>
+                </div>
+                <div class="table-responsive">
+                    <table id="miscTable">
+                        <thead><tr><th>項目</th><th>金額</th><th>操作</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <button class="btn btn-success" onclick="saveDailyLog()" style="width:100%; padding:15px; margin-top:20px; font-size:1.1em;">✅ 保存今日記帳</button>
+            </div>
+
+            <!-- 廠商對帳 -->
+            <div id="reconciliation" class="tab-content">
+                <h3>🧾 廠商對帳與統計</h3>
+                <div class="form-group">
+                    <input type="month" id="reconciliationMonth" onchange="loadReconciliation()">
+                </div>
+                <div id="vendorReconciliationContainer"></div>
+            </div>
+
+            <!-- 月結算 -->
+            <div id="monthly" class="tab-content">
+                <h3>📋 月結算輸入</h3>
+                <div class="form-group">
+                    <input type="month" id="settlementMonth" onchange="loadMonthlySettlementForm()">
+                </div>
+                <div id="staffHoursContainer"></div>
+            </div>
+
+            <!-- 報表中心 -->
+            <div id="reports" class="tab-content">
+                <h3>📈 報表中心</h3>
+                <div class="form-group">
+                    <input type="month" id="reportMonth" onchange="loadReports()">
+                </div>
+                <div id="reportStats"></div>
+            </div>
+
+            <!-- 系統設定 -->
+            <div id="settings" class="tab-content">
+                <h3>⚙️ 系統設定</h3>
+                <div id="settingsContainer"></div>
+                
+                <hr style="margin:20px 0; border:none; border-top:1px solid #eee;">
+                
+                <div class="collapse-btn" onclick="toggleCollapse('emp-section')">👥 員工管理 <span>▼</span></div>
+                <div id="emp-section" class="collapse-content">
+                    <div id="employeesContainer"></div>
+                    <button class="btn btn-primary btn-sm" style="width:100%; margin-top:10px;" onclick="showAddEmployeeForm()">+ 新增員工</button>
+                    <div id="addEmployeeForm" class="hidden card" style="margin-top:10px;">
+                        <h4>新增員工</h4>
+                        <div class="form-group"><input type="text" id="newEmpName" placeholder="姓名"></div>
+                        <div class="form-group"><input type="number" step="any" id="newEmpRate" placeholder="時薪" inputmode="decimal"></div>
+                        <div class="form-group"><input type="number" step="any" id="newEmpBonus" placeholder="獎金比例 (%)" inputmode="decimal"></div>
+                        <button class="btn btn-success btn-sm" style="width:100%" onclick="addEmployee()">確認新增</button>
+                    </div>
+                </div>
+
+                <div class="collapse-btn" onclick="toggleCollapse('vendor-section')">📦 廠商管理 <span>▼</span></div>
+                <div id="vendor-section" class="collapse-content">
+                    <div id="vendorListContainer"></div>
+                    <button class="btn btn-primary btn-sm" style="width:100%; margin-top:10px;" onclick="showAddVendorForm()">+ 新增廠商</button>
+                    <div id="addVendorForm" class="hidden card" style="margin-top:10px;">
+                        <h4>新增廠商</h4>
+                        <div class="form-group"><input type="text" id="newVendorName" placeholder="廠商名稱"></div>
+                        <div class="form-group">
+                            <select id="newVendorType">
+                                <option value="amount">直接輸入金額</option>
+                                <option value="items">自定義品項數量</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-success btn-sm" style="width:100%" onclick="addVendor()">確認新增</button>
+                    </div>
+                </div>
+
+                <hr style="margin:20px 0; border:none; border-top:1px solid #eee;">
+                <div class="grid">
+                    <button class="btn btn-secondary" onclick="exportData()">📤 備份資料</button>
+                    <button class="btn btn-secondary" onclick="importData()">📥 匯入資料</button>
+                </div>
+                <button class="btn btn-danger" style="width:100%; margin-top:10px;" onclick="clearHistory()">🗑️ 清理歷史帳目</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
