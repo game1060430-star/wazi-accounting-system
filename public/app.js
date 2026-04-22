@@ -1,4 +1,3 @@
-// ==================== localStorage 資料層 ====================
 
 const DB = {
     get(key, defaultVal) {
@@ -578,10 +577,18 @@ function saveMonthlySettlement() {
 
 function getMonthlyStats(month) {
     const dailyKeys = Object.keys(localStorage).filter(k => k.startsWith('wazi_daily_log_' + month));
-    let totalRevenue = 0, workingDays = 0;
+    const settings = DB.get('settings', {});
+    const openingCash = settings.opening_cash || 8000;
+    
+    let totalRevenue = 0, workingDays = 0, totalCashNet = 0;
     dailyKeys.forEach(key => {
         const log = DB.get(key.replace('wazi_', ''), {});
-        if (log.dailyTotal !== undefined) { totalRevenue += log.dailyTotal; workingDays++; }
+        if (log.dailyTotal !== undefined) { 
+            totalRevenue += log.dailyTotal; 
+            workingDays++; 
+            // 報表中心：現金收入扣除零用金
+            totalCashNet += (log.cashTotal - openingCash);
+        }
     });
     const purchaseKeys = Object.keys(localStorage).filter(k => k.startsWith('wazi_purchases_' + month));
     let vendorTotal = 0;
@@ -594,7 +601,7 @@ function getMonthlyStats(month) {
     dailyLogs.forEach(log => {
         (log.miscellaneous || []).forEach(i => { miscTotal += i.amount || 0; });
     });
-    return { totalRevenue, vendorTotal, miscTotal, workingDays, avgDaily: workingDays > 0 ? Math.round(totalRevenue / workingDays) : 0 };
+    return { totalRevenue, vendorTotal, miscTotal, workingDays, avgDaily: workingDays > 0 ? Math.round(totalRevenue / workingDays) : 0, totalCashNet };
 }
 
 function loadReports() {
@@ -602,259 +609,89 @@ function loadReports() {
     const stats = getMonthlyStats(month);
     const settlement = DB.get('monthly_settlement_' + month, {});
     const settings = DB.get('settings', {});
-    const startDegrees = settlement.start_degrees || { water: settings.water_start, e110: settings.electric110_start, e220: settings.electric220_start, gas: settings.gas_start };
-    const openingCash = settings.opening_cash || 8000;
 
-    let html = `<h3 style="text-align:center;">📊 ${month} 報表</h3>`;
-    
-    html += `<h3 style="margin-top:20px;text-align:center;">每日營業額</h3><div class="table-responsive"><table><thead><tr><th>日期</th><th>現金</th><th>其他</th><th>總額</th></tr></thead><tbody>`;
-    const dailyKeys = Object.keys(localStorage).filter(k => k.startsWith('wazi_daily_log_' + month)).sort();
-    dailyKeys.forEach(key => {
-        const date = key.replace('wazi_daily_log_', ''), log = DB.get('daily_log_' + date, {});
-        if (log.dailyTotal !== undefined) {
-            // 報表中心：現金收入應扣除零用金
-            const cash = (log.cashTotal || 0) - openingCash;
-            const other = (log.onlineActual || 0) + (log.scanActual || 0);
-            html += `<tr><td>${date.substring(8)}日</td><td>NT$ ${cash.toLocaleString()}</td><td>NT$ ${other.toLocaleString()}</td><td><strong>NT$ ${log.dailyTotal.toLocaleString()}</strong></td></tr>`;
-        }
-    });
-    html += `</tbody></table></div><div class="alert alert-success" style="font-size:0.9em;text-align:center;"><strong>全月總營收:</strong> NT$ ${stats.totalRevenue.toLocaleString()}</div>`;
-
-    let totalSalary = 0;
-    html += `<h3 style="margin-top:20px;text-align:center;">員工薪資</h3><div class="table-responsive"><table><thead><tr><th>員工</th><th>總薪資</th></tr></thead><tbody>`;
-    employees.forEach(emp => {
-        const hours = settlement.staffHours?.[emp.id] || 0;
-        const bonus = Math.round(emp.hourly_rate * hours * (emp.bonus_rate / 100));
-        const total = Math.round(emp.hourly_rate * hours + bonus);
-        totalSalary += total;
-        html += `<tr><td>${emp.name}</td><td>NT$ ${total.toLocaleString()}</td></tr>`;
-    });
-    html += `</tbody></table></div>`;
-
-    const water = Math.max(0, (settlement.water || 0) - (startDegrees.water || 0)) * (settings.water_price || 9);
-    const mainE110 = Math.max(0, (settlement.e110 || 0) - (startDegrees.e110 || 0)) * (settings.electric110_price || 5);
-    const mainE220 = Math.max(0, (settlement.e220 || 0) - (startDegrees.e220 || 0)) * (settings.electric220_price || 5);
-    const electric = mainE110 + mainE220;
-    const gas = Math.max(0, (settlement.gas || 0) - (startDegrees.gas || 0)) * (settings.gas_price || 151);
-    const tax = (settlement.tax || 0) * 0.05;
-    const rent = settlement.rent || 0;
-    const publicFee = settlement.publicFee || 0;
-    const equipmentRent = 1500;
-    const totalFixed = water + electric + gas + rent + publicFee + tax + stats.miscTotal + equipmentRent;
-    
-    const net = stats.totalRevenue - totalSalary - stats.vendorTotal - Math.round(totalFixed);
-    html += `<h3 style="margin-top:20px;text-align:center;">本月淨利</h3><div class="alert alert-success" style="font-size:1.3em;padding:20px;text-align:center;"><strong style="font-size:1.5em;">NT$ ${net.toLocaleString()}</strong></div>`;
-    html += `<button class="btn btn-primary" style="width:100%" onclick="generatePDF('${month}')">📄 導出 PDF</button>`;
-    document.getElementById('reportStats').innerHTML = html;
-}
-
-function generatePDF(month) {
-    const stats = getMonthlyStats(month);
-    const settlement = DB.get('monthly_settlement_' + month, {});
-    const settings = DB.get('settings', {});
-    const startDegrees = settlement.start_degrees || { water: settings.water_start, e110: settings.electric110_start, e220: settings.electric220_start, gas: settings.gas_start };
-
-    const water = Math.max(0, (settlement.water || 0) - (startDegrees.water || 0)) * (settings.water_price || 9);
-    const mainE110 = Math.max(0, (settlement.e110 || 0) - (startDegrees.e110 || 0)) * (settings.electric110_price || 5);
-    const mainE220 = Math.max(0, (settlement.e220 || 0) - (startDegrees.e220 || 0)) * (settings.electric220_price || 5);
-    const electric = mainE110 + mainE220;
-    const gas = Math.max(0, (settlement.gas || 0) - (startDegrees.gas || 0)) * (settings.gas_price || 151);
-    const tax = (settlement.tax || 0) * 0.05;
-    const rent = settlement.rent || 0;
-    const publicFee = settlement.publicFee || 0;
-    const equipmentRent = 1500;
-    const totalFixed = water + electric + gas + rent + publicFee + tax + stats.miscTotal + equipmentRent;
-
-    let totalSalary = 0;
-    employees.forEach(emp => {
-        const hours = settlement.staffHours?.[emp.id] || 0;
-        const bonus = Math.round(emp.hourly_rate * hours * (emp.bonus_rate / 100));
-        totalSalary += Math.round(emp.hourly_rate * hours + bonus);
-    });
-
-    const net = stats.totalRevenue - totalSalary - stats.vendorTotal - Math.round(totalFixed);
-
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <html><head><title>${month} 報表</title><style>
-            body { font-family: sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-            th { background: #f2f2f2; }
-            .summary { background: #e7f3ff; padding: 15px; border-radius: 8px; margin-top: 20px; }
-        </style></head><body>
-            <h1>Wazi 早餐店 - ${month} 營運報表</h1>
-            <div class="summary">
-                <h2>本月結算摘要</h2>
-                <p>總營業額: NT$ ${stats.totalRevenue.toLocaleString()}</p>
-                <p>總進貨支出: NT$ ${stats.vendorTotal.toLocaleString()}</p>
-                <p>總人事支出: NT$ ${totalSalary.toLocaleString()}</p>
-                <p>總固定支出: NT$ ${Math.round(totalFixed).toLocaleString()}</p>
-                <hr>
-                <h2 style="color:#2ecc71;">本月淨利: NT$ ${net.toLocaleString()}</h2>
+    let html = `
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white;">
+            <h3 style="margin-bottom:15px;">📊 ${month} 營運概況</h3>
+            <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap:10px;">
+                <div><small>總營業額</small><br><strong>NT$ ${stats.totalRevenue.toLocaleString()}</strong></div>
+                <div><small>日均營收</small><br><strong>NT$ ${stats.avgDaily.toLocaleString()}</strong></div>
+                <div><small>現金淨額</small><br><strong>NT$ ${stats.totalCashNet.toLocaleString()}</strong></div>
+                <div><small>營運天數</small><br><strong>${stats.workingDays} 天</strong></div>
             </div>
-        </body></html>
-    `);
-    printWindow.document.close();
-    printWindow.print();
+        </div>
+    `;
+    document.getElementById('reportContainer').innerHTML = html;
 }
 
 // ==================== 系統設定 ====================
 
-function toggleCollapse(id) {
-    const content = document.getElementById(id);
-    content.classList.toggle('active');
-}
-
 function loadEmployeesDisplay() {
-    const container = document.getElementById('employeesContainer');
+    const container = document.getElementById('employeeList');
     container.innerHTML = '';
     employees.forEach(emp => {
         container.innerHTML += `
-            <div class="card" style="margin-bottom:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <strong>${emp.name}</strong>
-                    <div>
-                        <button class="btn btn-primary btn-sm" onclick="editEmployee(${emp.id})">編輯</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteEmployee(${emp.id})">刪除</button>
-                    </div>
-                </div>
-                <div id="edit-emp-${emp.id}" class="hidden" style="border-top:1px solid #eee; padding-top:10px;">
-                    <div class="grid">
-                        <div class="form-group"><label>時薪</label><input type="number" id="edit-rate-${emp.id}" value="${emp.hourly_rate}" inputmode="decimal"></div>
-                        <div class="form-group"><label>獎金 %</label><input type="number" id="edit-bonus-${emp.id}" value="${emp.bonus_rate}" inputmode="decimal"></div>
-                    </div>
-                    <button class="btn btn-success btn-sm" style="width:100%" onclick="saveEmployee(${emp.id})">保存修改</button>
-                </div>
+            <div class="card" style="margin-bottom:10px; padding:10px; display:flex; justify-content:space-between; align-items:center;">
+                <div><strong>${emp.name}</strong> (時薪: ${emp.hourly_rate}, 獎金: ${emp.bonus_rate}%)</div>
+                <button class="btn btn-danger btn-sm" onclick="deleteEmployee(${emp.id})">刪除</button>
             </div>
         `;
     });
 }
 
-function showAddEmployeeForm() {
-    document.getElementById('addEmployeeForm').classList.toggle('hidden');
-}
-
 function addEmployee() {
-    const name = document.getElementById('newEmpName').value;
-    const rate = parseFloat(document.getElementById('newEmpRate').value) || 180;
-    const bonus = parseFloat(document.getElementById('newEmpBonus').value) || 0;
-    if (name) {
+    const name = document.getElementById('empName').value;
+    const rate = parseFloat(document.getElementById('empRate').value) || 0;
+    const bonus = parseFloat(document.getElementById('empBonus').value) || 0;
+    if (name && rate > 0) {
         const nextId = DB.get('nextEmpId', 100);
         employees.push({ id: nextId, name, hourly_rate: rate, bonus_rate: bonus });
         DB.set('employees', employees);
         DB.set('nextEmpId', nextId + 1);
-        document.getElementById('newEmpName').value = '';
-        showAddEmployeeForm();
         loadEmployeesDisplay();
-    }
-}
-
-function editEmployee(id) {
-    document.getElementById(`edit-emp-${id}`).classList.toggle('hidden');
-}
-
-function saveEmployee(id) {
-    const rate = parseFloat(document.getElementById(`edit-rate-${id}`).value) || 180;
-    const bonus = parseFloat(document.getElementById(`edit-bonus-${id}`).value) || 0;
-    const idx = employees.findIndex(e => e.id == id);
-    if (idx !== -1) {
-        employees[idx].hourly_rate = rate;
-        employees[idx].bonus_rate = bonus;
-        DB.set('employees', employees);
-        loadEmployeesDisplay();
-        alert('✅ 員工資料已更新');
+        document.getElementById('empName').value = '';
+        document.getElementById('empRate').value = '';
+        document.getElementById('empBonus').value = '';
     }
 }
 
 function deleteEmployee(id) {
-    if (confirm('確定要刪除此員工嗎？')) {
-        employees = employees.filter(e => e.id != id);
+    if (confirm('確定要刪除嗎？')) {
+        employees = employees.filter(e => e.id !== id);
         DB.set('employees', employees);
         loadEmployeesDisplay();
     }
 }
 
 function loadVendorsDisplay() {
-    const container = document.getElementById('vendorsContainer');
+    const container = document.getElementById('vendorList');
     container.innerHTML = '';
     vendors.forEach(v => {
-        let itemsHtml = '';
-        if (v.type === 'items') {
-            v.items.forEach((item, idx) => {
-                itemsHtml += `
-                    <div style="display:flex; gap:5px; margin-bottom:5px;">
-                        <input type="text" value="${item.name}" onchange="updateVendorItem(${v.id}, ${idx}, 'name', this.value)" style="flex:2; font-size:14px;">
-                        <input type="number" value="${item.price}" onchange="updateVendorItem(${v.id}, ${idx}, 'price', this.value)" style="flex:1; font-size:14px;" inputmode="decimal">
-                        <button class="btn btn-danger btn-sm" onclick="deleteVendorItem(${v.id}, ${idx})">×</button>
-                    </div>
-                `;
-            });
-            itemsHtml += `<button class="btn btn-secondary btn-sm" style="width:100%; margin-top:5px;" onclick="addVendorItem(${v.id})">+ 新增品項</button>`;
-        }
-        
         container.innerHTML += `
-            <div class="card" style="margin-bottom:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <strong>${v.name} (${v.type === 'items' ? '品項模式' : '金額模式'})</strong>
-                    <button class="btn btn-danger btn-sm" onclick="deleteVendor(${v.id})">刪除</button>
-                </div>
-                ${itemsHtml}
+            <div class="card" style="margin-bottom:10px; padding:10px; display:flex; justify-content:space-between; align-items:center;">
+                <div><strong>${v.name}</strong> (${v.type === 'items' ? '品項模式' : '金額模式'})</div>
+                <button class="btn btn-danger btn-sm" onclick="deleteVendor(${v.id})">刪除</button>
             </div>
         `;
     });
 }
 
-function showAddVendorForm() {
-    document.getElementById('addVendorForm').classList.toggle('hidden');
-}
-
 function addVendor() {
-    const name = document.getElementById('newVendorName').value;
-    const type = document.getElementById('newVendorType').value;
+    const name = document.getElementById('vendorName').value;
+    const type = document.getElementById('vendorType').value;
     if (name) {
         const nextId = DB.get('nextVendorId', 100);
-        const newVendor = { id: nextId, name, type };
-        if (type === 'items') newVendor.items = [];
-        vendors.push(newVendor);
+        vendors.push({ id: nextId, name, type, items: type === 'items' ? [] : undefined });
         DB.set('vendors', vendors);
         DB.set('nextVendorId', nextId + 1);
-        document.getElementById('newVendorName').value = '';
-        showAddVendorForm();
         loadVendorsDisplay();
+        document.getElementById('vendorName').value = '';
     }
 }
 
 function deleteVendor(id) {
-    if (confirm('確定要刪除此廠商嗎？')) {
-        vendors = vendors.filter(v => v.id != id);
-        DB.set('vendors', vendors);
-        loadVendorsDisplay();
-    }
-}
-
-function addVendorItem(vendorId) {
-    const idx = vendors.findIndex(v => v.id == vendorId);
-    if (idx !== -1) {
-        vendors[idx].items.push({ name: '新品項', price: 0 });
-        DB.set('vendors', vendors);
-        loadVendorsDisplay();
-    }
-}
-
-function updateVendorItem(vendorId, itemIdx, field, value) {
-    const idx = vendors.findIndex(v => v.id == vendorId);
-    if (idx !== -1) {
-        if (field === 'price') value = parseFloat(value) || 0;
-        vendors[idx].items[itemIdx][field] = value;
-        DB.set('vendors', vendors);
-    }
-}
-
-function deleteVendorItem(vendorId, itemIdx) {
-    const idx = vendors.findIndex(v => v.id == vendorId);
-    if (idx !== -1) {
-        vendors[idx].items.splice(itemIdx, 1);
+    if (confirm('確定要刪除嗎？')) {
+        vendors = vendors.filter(v => v.id !== id);
         DB.set('vendors', vendors);
         loadVendorsDisplay();
     }
@@ -862,80 +699,37 @@ function deleteVendorItem(vendorId, itemIdx) {
 
 function loadSettingsDisplay() {
     const settings = DB.get('settings', {});
-    const container = document.getElementById('settingsContainer');
-    container.innerHTML = `
-        <div class="card">
-            <h4>💰 基礎設定</h4>
-            <div class="grid">
-                <div class="form-group"><label>開盤零用金</label><input type="number" id="set-opening" value="${settings.opening_cash || 8000}" inputmode="decimal"></div>
-                <div class="form-group"><label>支付手續費 %</label><input type="number" id="set-fee" value="${settings.fee_rate || 2.4}" step="0.1" inputmode="decimal"></div>
-            </div>
-            <div class="grid">
-                <div class="form-group"><label>預設租金</label><input type="number" id="set-rent" value="${settings.default_rent || 50000}" inputmode="decimal"></div>
-                <div class="form-group"><label>系統密碼</label><input type="password" id="set-pass" value="${settings.password || '1031'}" inputmode="decimal"></div>
-            </div>
-        </div>
-        <div class="card">
-            <h4>⚡ 能源單價設定</h4>
-            <div class="grid">
-                <div class="form-group"><label>水費單價</label><input type="number" id="set-water-p" value="${settings.water_price || 9}" inputmode="decimal"></div>
-                <div class="form-group"><label>瓦斯單價</label><input type="number" id="set-gas-p" value="${settings.gas_price || 151}" inputmode="decimal"></div>
-            </div>
-            <div class="grid">
-                <div class="form-group"><label>電費 110V</label><input type="number" id="set-e110-p" value="${settings.electric110_price || 5}" inputmode="decimal"></div>
-                <div class="form-group"><label>電費 220V</label><input type="number" id="set-e220-p" value="${settings.electric220_price || 5}" inputmode="decimal"></div>
-            </div>
-        </div>
-        <div class="card">
-            <h4>📏 能源起始度數</h4>
-            <div class="grid">
-                <div class="form-group"><label>水費起始</label><input type="number" id="set-water-s" value="${settings.water_start || 0}" inputmode="decimal"></div>
-                <div class="form-group"><label>瓦斯起始</label><input type="number" id="set-gas-s" value="${settings.gas_start || 0}" inputmode="decimal"></div>
-            </div>
-            <div class="grid">
-                <div class="form-group"><label>110V 起始</label><input type="number" id="set-e110-s" value="${settings.electric110_start || 0}" inputmode="decimal"></div>
-                <div class="form-group"><label>220V 起始</label><input type="number" id="set-e220-s" value="${settings.electric220_start || 0}" inputmode="decimal"></div>
-            </div>
-        </div>
-        <button class="btn btn-success" style="width:100%; padding:15px;" onclick="saveGeneralSettings()">💾 保存系統設定</button>
-        
-        <div style="margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <button class="btn btn-primary" onclick="exportData()">📤 備份資料</button>
-            <button class="btn btn-primary" onclick="importData()">📥 還原資料</button>
-        </div>
-        <button class="btn btn-danger" style="width:100%; margin-top:10px;" onclick="clearAllData()">🗑️ 清理歷史帳目</button>
-    `;
+    document.getElementById('set-water-start').value = settings.water_start || '';
+    document.getElementById('set-e110-start').value = settings.electric110_start || '';
+    document.getElementById('set-e220-start').value = settings.electric220_start || '';
+    document.getElementById('set-gas-start').value = settings.gas_start || '';
+    document.getElementById('set-fee-rate').value = settings.fee_rate || 2.4;
+    document.getElementById('set-opening-cash').value = settings.opening_cash || 8000;
 }
 
-function saveGeneralSettings() {
+function saveSettings() {
     const settings = DB.get('settings', {});
-    settings.opening_cash = parseFloat(document.getElementById('set-opening').value) || 8000;
-    settings.fee_rate = parseFloat(document.getElementById('set-fee').value) || 2.4;
-    settings.default_rent = parseFloat(document.getElementById('set-rent').value) || 50000;
-    settings.password = document.getElementById('set-pass').value || '1031';
-    
-    settings.water_price = parseFloat(document.getElementById('set-water-p').value) || 9;
-    settings.gas_price = parseFloat(document.getElementById('set-gas-p').value) || 151;
-    settings.electric110_price = parseFloat(document.getElementById('set-e110-p').value) || 5;
-    settings.electric220_price = parseFloat(document.getElementById('set-e220-p').value) || 5;
-    
-    settings.water_start = parseFloat(document.getElementById('set-water-s').value) || 0;
-    settings.gas_start = parseFloat(document.getElementById('set-gas-s').value) || 0;
-    settings.electric110_start = parseFloat(document.getElementById('set-e110-s').value) || 0;
-    settings.electric220_start = parseFloat(document.getElementById('set-e220-s').value) || 0;
+    settings.water_start = parseFloat(document.getElementById('set-water-start').value) || 0;
+    settings.electric110_start = parseFloat(document.getElementById('set-e110-start').value) || 0;
+    settings.electric220_start = parseFloat(document.getElementById('set-e220-start').value) || 0;
+    settings.gas_start = parseFloat(document.getElementById('set-gas-start').value) || 0;
+    settings.fee_rate = parseFloat(document.getElementById('set-fee-rate').value) || 2.4;
+    settings.opening_cash = parseFloat(document.getElementById('set-opening-cash').value) || 8000;
     
     DB.set('settings', settings);
-    alert('✅ 系統設定已保存');
+    alert('✅ 設定已保存');
+}
+
+function toggleCollapse(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active');
 }
 
 function exportData() {
     const data = {};
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith('wazi_')) {
-            data[key] = localStorage.getItem(key);
-        }
-    }
+    Object.keys(localStorage).forEach(k => {
+        if (k.startsWith('wazi_')) data[k] = localStorage.getItem(k);
+    });
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -944,35 +738,35 @@ function exportData() {
     a.click();
 }
 
-function importData() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-            const data = JSON.parse(reader.result);
-            Object.keys(data).forEach(key => {
-                localStorage.setItem(key, data[key]);
-            });
-            alert('✅ 資料還原成功，請重新整理網頁。');
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            Object.keys(data).forEach(k => localStorage.setItem(k, data[k]));
+            alert('✅ 匯入成功，頁面即將刷新');
             location.reload();
-        };
-        reader.readAsText(file);
+        } catch { alert('❌ 匯入失敗，請檢查檔案格式'); }
     };
-    input.click();
+    reader.readAsText(file);
 }
 
-function clearAllData() {
-    const pass = prompt('請輸入系統密碼以確認清理所有歷史帳目：');
+function clearHistory() {
     const settings = DB.get('settings', {});
-    if (pass === (settings.password || '1031')) {
-        const keys = Object.keys(localStorage).filter(k => k.startsWith('wazi_daily_log_') || k.startsWith('wazi_monthly_settlement_'));
-        keys.forEach(k => localStorage.removeItem(k));
-        alert('✅ 歷史帳目已清理（保留了員工、廠商與度數設定）。');
-        location.reload();
+    const pw = prompt('請輸入管理密碼以清理歷史帳目：');
+    if (pw === (settings.password || '1031')) {
+        if (confirm('確定要清理所有歷史帳目嗎？(將保留員工、廠商與度數設定)')) {
+            Object.keys(localStorage).forEach(k => {
+                if (k.startsWith('wazi_daily_log_') || k.startsWith('wazi_monthly_settlement_')) {
+                    localStorage.removeItem(k);
+                }
+            });
+            alert('✅ 歷史帳目已清理');
+            location.reload();
+        }
     } else {
-        alert('❌ 密碼錯誤，取消清理。');
+        alert('❌ 密碼錯誤');
     }
 }
