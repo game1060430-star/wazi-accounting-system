@@ -1,0 +1,11 @@
+{
+  "name": "wazi-accounting-system",
+  "version": "1.0.0",
+  "description": "Wazi 早餐店記帳系統",
+  "scripts": {
+    "start": "serve public"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}
