@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -9,65 +10,48 @@
         html, body { overflow-x: hidden; width: 100%; position: relative; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 10px; -webkit-text-size-adjust: 100%; }
         .container { max-width: 1200px; margin: 0 auto; width: 100%; overflow-x: hidden; padding: 5px; }
-        
-        /* 登入介面 */
         .login-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .login-card { background: white; border-radius: 15px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-width: 400px; width: 100%; text-align: center; }
         .login-card h1 { color: #333; margin-bottom: 10px; font-size: 2em; }
         .login-card input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 20px; text-align: center; }
         .login-card button { width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        
         #mainScreen { display: none; }
         .header { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
         .header h1 { color: #333; font-size: 1.4em; margin: 0; }
         .logout-btn { padding: 8px 15px; background: #ff6b6b; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em; }
-        
-        /* 導覽列 */
         .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .tab-btn { padding: 10px 5px; background: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: #666; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 0.85em; }
         .tab-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        
-        /* 內容區 */
         .content { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); min-height: 60vh; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        
         h2, h3, h4 { text-align: center; margin-bottom: 15px; color: #333; }
         .form-group { margin-bottom: 15px; text-align: center; }
         .form-group label { display: block; margin-bottom: 5px; color: #666; font-weight: bold; font-size: 0.9em; }
         .form-group input, .form-group select { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-size: 16px; text-align: center; }
-        
         .card { background: #f9f9f9; border-radius: 10px; padding: 15px; border-left: 4px solid #667eea; margin-bottom: 15px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
-        
         .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; text-align: center; display: inline-block; }
         .btn-primary { background: #667eea; color: white; }
         .btn-success { background: #51cf66; color: white; }
         .btn-danger { background: #ff6b6b; color: white; }
         .btn-secondary { background: #f0f0f0; color: #333; }
         .btn-sm { padding: 5px 10px; font-size: 0.8em; }
-        
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; }
         table { width: 100%; border-collapse: collapse; }
         table th { background: #667eea; color: white; padding: 10px; font-size: 0.9em; }
         table td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 0.9em; }
-        
-        /* 概況卡片 */
         .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 10px; }
         .stat-card h4 { font-size: 0.8em; opacity: 0.8; margin-bottom: 5px; color: white; }
         .stat-card .value { font-size: 1.4em; font-weight: bold; }
-        
-        /* 現金輸入 */
         .cash-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .cash-input-group { background: #f9f9f9; padding: 10px; border-radius: 8px; text-align: center; }
         .cash-input-group label { display: block; font-size: 0.8em; color: #888; margin-bottom: 5px; }
         .cash-input-group input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; text-align: center; font-size: 16px; }
-        
-        /* 摺疊面板 */
         .collapse-btn { width: 100%; text-align: left; padding: 12px; background: #f8f9fa; border: 1px solid #eee; border-radius: 8px; margin-bottom: 5px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .collapse-content { display: none; padding: 15px; border: 1px solid #eee; border-top: none; border-radius: 0 0 8px 8px; margin-bottom: 10px; background: white; }
         .collapse-content.active { display: block; }
-
+        .hidden { display: none; }
         @media (max-width: 768px) {
             .grid { grid-template-columns: 1fr 1fr; }
             input, select, textarea { font-size: 16px !important; }
@@ -75,174 +59,836 @@
     </style>
 </head>
 <body>
-    <div id="loginScreen" class="login-container" style="display: none;">
-        <div class="login-card">
-            <h1>🍞 Wazi</h1>
-            <p style="color:#666; margin-bottom:20px;">早餐店記帳系統</p>
-            <input type="password" id="passwordInput" placeholder="請輸入密碼" inputmode="decimal" autofocus onkeydown="if(event.key==='Enter') login()">
-            <button onclick="login()">登入</button>
-        </div>
+    <div id="loginScreen" class="login-container" style="display: none;"></div>
+
+```
+<div id="mainScreen" class="container" style="display: block;">
+    <div class="header">
+        <h1>🍞 記帳系統</h1>
+        <button class="logout-btn" onclick="logout()">登出</button>
     </div>
 
-    <div id="mainScreen" class="container" style="display: block;">
-        <div class="header">
-            <h1>🍞 記帳系統</h1>
-            <button class="logout-btn" onclick="logout()">登出</button>
-        </div>
-
-        <div class="tabs">
-            <button class="tab-btn" onclick="switchTab('dashboard')">概況</button>
-            <button class="tab-btn active" onclick="switchTab('daily-log')">每日記帳</button>
-            <button class="tab-btn" onclick="switchTab('reconciliation')">廠商對帳</button>
-            <button class="tab-btn" onclick="switchTab('monthly')">月結算</button>
-            <button class="tab-btn" onclick="switchTab('reports')">報表中心</button>
-            <button class="tab-btn" onclick="switchTab('settings')">系統設定</button>
-        </div>
-
-        <div class="content">
-            <!-- 概況 -->
-            <div id="dashboard" class="tab-content">
-                <h3>📊 本月概況</h3>
-                <div id="statsGrid" class="grid"></div>
-            </div>
-
-            <!-- 每日記帳 -->
-            <div id="daily-log" class="tab-content active">
-                <h3>📝 每日記帳</h3>
-                <div class="form-group">
-                    <input type="date" id="logDate" onchange="loadDailyLog()">
-                </div>
-
-                <div class="card" style="border-left-color:#51cf66;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                        <h4 style="margin:0;">💰 現金收入</h4>
-                        <button class="btn btn-secondary btn-sm" onclick="toggleDirectCash()">切換模式</button>
-                    </div>
-                    <div id="cashInputContainer" data-mode="count">
-                        <div class="cash-input-grid">
-                            <div class="cash-input-group"><label>千鈔</label><input type="number" step="any" id="cash1000" placeholder="張" inputmode="decimal"></div>
-                            <div class="cash-input-group"><label>百鈔</label><input type="number" step="any" id="cash100" placeholder="張" inputmode="decimal"></div>
-                        </div>
-                        <div class="cash-input-grid" style="grid-template-columns: repeat(3, 1fr);">
-                            <div class="cash-input-group"><label>50元</label><input type="number" step="any" id="cash50" placeholder="枚" inputmode="decimal"></div>
-                            <div class="cash-input-group"><label>10元</label><input type="number" step="any" id="cash10" placeholder="枚/金" inputmode="decimal"></div>
-                            <div class="cash-input-group"><label>5元</label><input type="number" step="any" id="cash5" placeholder="枚/金" inputmode="decimal"></div>
-                        </div>
-                    </div>
-                    <div style="text-align:center; font-weight:bold; color:#51cf66; margin-top:10px;">現金小計: <span id="cashTotal">NT$ 0</span></div>
-                </div>
-
-                <div class="grid">
-                    <div class="card" style="border-left-color:#667eea; padding:10px;">
-                        <h4 style="font-size:0.9em;margin-bottom:5px;">📱 網路支付</h4>
-                        <input type="number" step="any" id="onlineAmount" placeholder="金額" inputmode="decimal" style="width:100%;">
-                        <div style="font-size:0.8em;text-align:center;margin-top:5px;color:#667eea;">實收: <span id="onlineActual">0</span></div>
-                    </div>
-                    <div class="card" style="border-left-color:#667eea; padding:10px;">
-                        <h4 style="font-size:0.9em;margin-bottom:5px;">📸 掃碼支付</h4>
-                        <input type="number" step="any" id="scanAmount" placeholder="金額" inputmode="decimal" style="width:100%;">
-                        <div style="font-size:0.8em;text-align:center;margin-top:5px;color:#667eea;">實收: <span id="scanActual">0</span></div>
-                    </div>
-                </div>
-
-                <div class="stat-card" id="dailyNetProfitCard" style="background:linear-gradient(135deg, #51cf66 0%, #2d6a4f 100%);">
-                    <h4>今日淨營業額 (扣除零用金)</h4>
-                    <div class="value" id="dailyTotal">NT$ 0</div>
-                </div>
-
-                <h4 style="margin-top:20px;">📦 廠商進貨</h4>
-                <div id="vendorPurchasesContainer" class="grid"></div>
-
-                <h4 style="margin-top:20px;">🖍️ 雜支記錄</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; margin-bottom: 15px;">
-                    <input type="text" id="miscName" placeholder="項目" style="width: 100%; max-width: 400px;">
-                    <input type="number" step="any" id="miscAmount" placeholder="金額" inputmode="decimal" style="width: 100%; max-width: 400px;">
-                    <button class="btn btn-secondary btn-sm" onclick="addMiscellaneous()" style="width: 100%; max-width: 400px;">+ 新增雜支</button>
-                </div>
-                <div class="table-responsive">
-                    <table id="miscTable">
-                        <thead><tr><th>項目</th><th>金額</th><th>操作</th></tr></thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-                <button class="btn btn-success" onclick="saveDailyLog()" style="width:100%; padding:15px; margin-top:20px; font-size:1.1em;">✅ 保存今日記帳</button>
-            </div>
-
-            <!-- 廠商對帳 -->
-            <div id="reconciliation" class="tab-content">
-                <h3>🧾 廠商對帳與統計</h3>
-                <div class="form-group">
-                    <input type="month" id="reconciliationMonth" onchange="loadReconciliation()">
-                </div>
-                <div id="vendorReconciliationContainer"></div>
-            </div>
-
-            <!-- 月結算 -->
-            <div id="monthly" class="tab-content">
-                <h3>📋 月結算輸入</h3>
-                <div class="form-group">
-                    <input type="month" id="settlementMonth" onchange="loadMonthlySettlementForm()">
-                </div>
-                <div id="staffHoursContainer"></div>
-            </div>
-
-            <!-- 報表中心 -->
-            <div id="reports" class="tab-content">
-                <h3>📈 報表中心</h3>
-                <div class="form-group">
-                    <input type="month" id="reportMonth" onchange="loadReports()">
-                </div>
-                <div id="reportStats"></div>
-            </div>
-
-            <!-- 系統設定 -->
-            <div id="settings" class="tab-content">
-                <h3>⚙️ 系統設定</h3>
-                <div id="settingsContainer"></div>
-                
-                <hr style="margin:20px 0; border:none; border-top:1px solid #eee;">
-                
-                <div class="collapse-btn" onclick="toggleCollapse('emp-section')">👥 員工管理 <span>▼</span></div>
-                <div id="emp-section" class="collapse-content">
-                    <div id="employeesContainer"></div>
-                    <button class="btn btn-primary btn-sm" style="width:100%; margin-top:10px;" onclick="showAddEmployeeForm()">+ 新增員工</button>
-                    <div id="addEmployeeForm" class="hidden card" style="margin-top:10px;">
-                        <h4>新增員工</h4>
-                        <div class="form-group"><input type="text" id="newEmpName" placeholder="姓名"></div>
-                        <div class="form-group"><input type="number" step="any" id="newEmpRate" placeholder="時薪" inputmode="decimal"></div>
-                        <div class="form-group"><input type="number" step="any" id="newEmpBonus" placeholder="獎金比例 (%)" inputmode="decimal"></div>
-                        <button class="btn btn-success btn-sm" style="width:100%" onclick="addEmployee()">確認新增</button>
-                    </div>
-                </div>
-
-                <div class="collapse-btn" onclick="toggleCollapse('vendor-section')">📦 廠商管理 <span>▼</span></div>
-                <div id="vendor-section" class="collapse-content">
-                    <div id="vendorListContainer"></div>
-                    <button class="btn btn-primary btn-sm" style="width:100%; margin-top:10px;" onclick="showAddVendorForm()">+ 新增廠商</button>
-                    <div id="addVendorForm" class="hidden card" style="margin-top:10px;">
-                        <h4>新增廠商</h4>
-                        <div class="form-group"><input type="text" id="newVendorName" placeholder="廠商名稱"></div>
-                        <div class="form-group">
-                            <select id="newVendorType">
-                                <option value="amount">直接輸入金額</option>
-                                <option value="items">自定義品項數量</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-success btn-sm" style="width:100%" onclick="addVendor()">確認新增</button>
-                    </div>
-                </div>
-
-                <hr style="margin:20px 0; border:none; border-top:1px solid #eee;">
-                <div class="grid">
-                    <button class="btn btn-secondary" onclick="exportData()">📤 備份資料</button>
-                    <button class="btn btn-secondary" onclick="importData()">📥 匯入資料</button>
-                </div>
-                <button class="btn btn-danger" style="width:100%; margin-top:10px;" onclick="clearHistory()">🗑️ 清理歷史帳目</button>
-            </div>
-        </div>
+    <div class="tabs">
+        <button class="tab-btn" onclick="switchTab('dashboard')">概況</button>
+        <button class="tab-btn active" onclick="switchTab('daily-log')">每日記帳</button>
+        <button class="tab-btn" onclick="switchTab('reconciliation')">廠商對帳</button>
+        <button class="tab-btn" onclick="switchTab('monthly')">月結算</button>
+        <button class="tab-btn" onclick="switchTab('reports')">報表中心</button>
+        <button class="tab-btn" onclick="switchTab('settings')">系統設定</button>
     </div>
 
-    <script src="app.js"></script>
+    <div class="content">
+        <!-- 概況 -->
+        <div id="dashboard" class="tab-content">
+            <h3>📊 本月概況</h3>
+            <div id="statsGrid" class="grid"></div>
+        </div>
+
+        <!-- 每日記帳 -->
+        <div id="daily-log" class="tab-content active">
+            <h3>📝 每日記帳</h3>
+            <div class="form-group">
+                <input type="date" id="logDate" onchange="loadDailyLog()">
+            </div>
+
+            <div class="card" style="border-left-color:#51cf66;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <h4 style="margin:0;">💰 現金收入</h4>
+                    <button class="btn btn-secondary btn-sm" onclick="toggleDirectCash()">切換模式</button>
+                </div>
+                <div id="cashInputContainer" data-mode="count">
+                    <div class="cash-input-grid">
+                        <div class="cash-input-group"><label>千鈔</label><input type="number" step="any" id="cash1000" placeholder="張" inputmode="decimal"></div>
+                        <div class="cash-input-group"><label>百鈔</label><input type="number" step="any" id="cash100" placeholder="張" inputmode="decimal"></div>
+                    </div>
+                    <div class="cash-input-grid" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="cash-input-group"><label>50元</label><input type="number" step="any" id="cash50" placeholder="枚" inputmode="decimal"></div>
+                        <div class="cash-input-group"><label>10元</label><input type="number" step="any" id="cash10" placeholder="枚/金" inputmode="decimal"></div>
+                        <div class="cash-input-group"><label>5元</label><input type="number" step="any" id="cash5" placeholder="枚/金" inputmode="decimal"></div>
+                    </div>
+                </div>
+                <div style="text-align:center; font-weight:bold; color:#51cf66; margin-top:10px;">現金小計: <span id="cashTotal">NT$ 0</span></div>
+            </div>
+
+            <div class="grid">
+                <div class="card" style="border-left-color:#667eea; padding:10px;">
+                    <h4 style="font-size:0.9em;margin-bottom:5px;">📱 網路支付</h4>
+                    <input type="number" step="any" id="onlineAmount" placeholder="金額" inputmode="decimal" style="width:100%;">
+                    <div style="font-size:0.8em;text-align:center;margin-top:5px;color:#667eea;">實收: <span id="onlineActual">0</span></div>
+                </div>
+                <div class="card" style="border-left-color:#667eea; padding:10px;">
+                    <h4 style="font-size:0.9em;margin-bottom:5px;">📸 掃碼支付</h4>
+                    <input type="number" step="any" id="scanAmount" placeholder="金額" inputmode="decimal" style="width:100%;">
+                    <div style="font-size:0.8em;text-align:center;margin-top:5px;color:#667eea;">實收: <span id="scanActual">0</span></div>
+                </div>
+            </div>
+
+            <div class="stat-card" id="dailyNetProfitCard" style="background:linear-gradient(135deg, #51cf66 0%, #2d6a4f 100%);">
+                <h4>今日淨營業額 (扣除零用金)</h4>
+                <div class="value" id="dailyTotal">NT$ 0</div>
+            </div>
+
+            <h4 style="margin-top:20px;">📦 廠商進貨</h4>
+            <div id="vendorPurchasesContainer" class="grid"></div>
+
+            <h4 style="margin-top:20px;">🖍️ 雜支記錄</h4>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; margin-bottom: 15px;">
+                <input type="text" id="miscName" placeholder="項目" style="width: 100%; max-width: 400px;">
+                <input type="number" step="any" id="miscAmount" placeholder="金額" inputmode="decimal" style="width: 100%; max-width: 400px;">
+                <button class="btn btn-secondary btn-sm" onclick="addMiscellaneous()" style="width: 100%; max-width: 400px;">+ 新增雜支</button>
+            </div>
+            <div class="table-responsive">
+                <table id="miscTable">
+                    <thead><tr><th>項目</th><th>金額</th><th>操作</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <button class="btn btn-success" onclick="saveDailyLog()" style="width:100%; padding:15px; margin-top:20px; font-size:1.1em;">✅ 保存今日記帳</button>
+        </div>
+
+        <!-- 廠商對帳 -->
+        <div id="reconciliation" class="tab-content">
+            <h3>🧾 廠商對帳與統計</h3>
+            <div class="form-group">
+                <input type="month" id="reconciliationMonth" onchange="loadReconciliation()">
+            </div>
+            <div id="vendorReconciliationContainer"></div>
+        </div>
+
+        <!-- 月結算 -->
+        <div id="monthly" class="tab-content">
+            <h3>📋 月結算輸入</h3>
+            <div class="form-group">
+                <input type="month" id="settlementMonth" onchange="loadMonthlySettlementForm()">
+            </div>
+            <div id="staffHoursContainer"></div>
+        </div>
+
+        <!-- 報表中心 -->
+        <div id="reports" class="tab-content">
+            <h3>📈 報表中心</h3>
+            <div class="form-group">
+                <input type="month" id="reportMonth" onchange="loadReports()">
+            </div>
+            <div id="reportStats"></div>
+        </div>
+
+        <!-- 系統設定 -->
+        <div id="settings" class="tab-content">
+            <h3>⚙️ 系統設定</h3>
+            <div id="settingsContainer">
+                <div class="card">
+                    <h4>⚙️ 基本設定</h4>
+                    <div class="grid">
+                        <div class="form-group"><label>水費起始度數</label><input type="number" step="any" id="set-water-start" inputmode="decimal"></div>
+                        <div class="form-group"><label>電費110V起始</label><input type="number" step="any" id="set-e110-start" inputmode="decimal"></div>
+                        <div class="form-group"><label>電費220V起始</label><input type="number" step="any" id="set-e220-start" inputmode="decimal"></div>
+                        <div class="form-group"><label>瓦斯起始度數</label><input type="number" step="any" id="set-gas-start" inputmode="decimal"></div>
+                        <div class="form-group"><label>手續費率 (%)</label><input type="number" step="any" id="set-fee-rate" inputmode="decimal"></div>
+                        <div class="form-group"><label>零用金金額</label><input type="number" step="any" id="set-opening-cash" inputmode="decimal"></div>
+                    </div>
+                    <button class="btn btn-success" style="width:100%" onclick="saveSettings()">💾 保存設定</button>
+                </div>
+            </div>
+
+            <hr style="margin:20px 0; border:none; border-top:1px solid #eee;">
+
+            <div class="collapse-btn" onclick="toggleCollapse('emp-section')">👥 員工管理 <span>▼</span></div>
+            <div id="emp-section" class="collapse-content">
+                <div id="employeesContainer"></div>
+                <button class="btn btn-primary btn-sm" style="width:100%; margin-top:10px;" onclick="showAddEmployeeForm()">+ 新增員工</button>
+                <div id="addEmployeeForm" class="hidden card" style="margin-top:10px;">
+                    <h4>新增員工</h4>
+                    <div class="form-group"><input type="text" id="newEmpName" placeholder="姓名"></div>
+                    <div class="form-group"><input type="number" step="any" id="newEmpRate" placeholder="時薪" inputmode="decimal"></div>
+                    <div class="form-group"><input type="number" step="any" id="newEmpBonus" placeholder="獎金比例 (%)" inputmode="decimal"></div>
+                    <button class="btn btn-success btn-sm" style="width:100%" onclick="addEmployee()">確認新增</button>
+                </div>
+            </div>
+
+            <div class="collapse-btn" onclick="toggleCollapse('vendor-section')">📦 廠商管理 <span>▼</span></div>
+            <div id="vendor-section" class="collapse-content">
+                <div id="vendorListContainer"></div>
+                <button class="btn btn-primary btn-sm" style="width:100%; margin-top:10px;" onclick="showAddVendorForm()">+ 新增廠商</button>
+                <div id="addVendorForm" class="hidden card" style="margin-top:10px;">
+                    <h4>新增廠商</h4>
+                    <div class="form-group"><input type="text" id="newVendorName" placeholder="廠商名稱"></div>
+                    <div class="form-group">
+                        <select id="newVendorType">
+                            <option value="amount">直接輸入金額</option>
+                            <option value="items">自定義品項數量</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success btn-sm" style="width:100%" onclick="addVendor()">確認新增</button>
+                </div>
+            </div>
+
+            <hr style="margin:20px 0; border:none; border-top:1px solid #eee;">
+            <div class="grid">
+                <button class="btn btn-secondary" onclick="exportData()">📤 備份資料</button>
+                <button class="btn btn-secondary" onclick="importData()">📥 匯入資料</button>
+            </div>
+            <button class="btn btn-danger" style="width:100%; margin-top:10px;" onclick="clearHistory()">🗑️ 清理歷史帳目</button>
+        </div>
+    </div>
+</div>
+```
+
+<script>
+const DB = {
+    get(key, defaultVal) {
+        try {
+            const v = localStorage.getItem('wazi_' + key);
+            return v !== null ? JSON.parse(v) : defaultVal;
+        } catch { return defaultVal; }
+    },
+    set(key, val) {
+        localStorage.setItem('wazi_' + key, JSON.stringify(val));
+    },
+    remove(key) {
+        localStorage.removeItem('wazi_' + key);
+    }
+};
+
+function initDefaultData() {
+    if (!DB.get('initialized', false)) {
+        DB.set('employees', [
+            { id: 1, name: '小可', hourly_rate: 180, bonus_rate: 0 },
+            { id: 2, name: '小鳳', hourly_rate: 180, bonus_rate: 0 },
+            { id: 3, name: '佩真', hourly_rate: 180, bonus_rate: 0 },
+            { id: 4, name: 'RURU', hourly_rate: 180, bonus_rate: 0 },
+            { id: 5, name: '小瑜', hourly_rate: 180, bonus_rate: 0 },
+            { id: 6, name: '春滿', hourly_rate: 180, bonus_rate: 0 }
+        ]);
+        DB.set('vendors', [
+            { id: 1, name: '麵包', type: 'items', items: [
+                { name: '吐司', price: 35 },
+                { name: '漢堡', price: 6.5 },
+                { name: '大亨堡', price: 8 }
+            ]},
+            { id: 2, name: '喬富', type: 'amount' },
+            { id: 3, name: '全閎', type: 'amount' },
+            { id: 4, name: '蘿蔔糕', type: 'amount' },
+            { id: 5, name: '昇威', type: 'amount' },
+            { id: 6, name: '高麗菜', type: 'amount' }
+        ]);
+        DB.set('settings', {
+            water_start: 144.9, water_price: 9,
+            electric110_start: 12751.2, electric110_price: 5,
+            electric220_start: 69325.4, electric220_price: 5,
+            gas_start: 751, gas_price: 151,
+            fee_rate: 2.4,
+            cash_multipliers: { c1000: 1000, c100: 100, c50: 5, c10: 1.3333, c5: 1.1111 },
+            opening_cash: 8000,
+            default_rent: 50000,
+            sub_electric110_start: 0, sub_electric110_price: 5,
+            sub_electric220_start: 0, sub_electric220_price: 5
+        });
+        DB.set('nextEmpId', 100);
+        DB.set('nextVendorId', 100);
+        DB.set('initialized', true);
+    }
+}
+
+let currentUser = 'admin';
+let employees = [];
+let vendors = [];
+let miscellaneousItems = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    initDefaultData();
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('logDate').value = today;
+    document.getElementById('settlementMonth').value = today.substring(0, 7);
+    document.getElementById('reconciliationMonth').value = today.substring(0, 7);
+    document.getElementById('reportMonth').value = today.substring(0, 7);
+    employees = DB.get('employees', []);
+    vendors = DB.get('vendors', []);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'block';
+    switchTab('daily-log');
+    bindDailyInputs();
+    loadDailyLog();
+});
+
+function bindDailyInputs() {
+    ['cash1000','cash100','cash50','cash10','cash5'].forEach(f => {
+        const el = document.getElementById(f);
+        if (el) el.addEventListener('input', calculateCash);
+    });
+    const online = document.getElementById('onlineAmount');
+    if (online) online.addEventListener('input', calculateOnline);
+    const scan = document.getElementById('scanAmount');
+    if (scan) scan.addEventListener('input', calculateScan);
+}
+
+function logout() {
+    if (confirm('確定要登出嗎？')) location.reload();
+}
+
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    const target = document.getElementById(tabName);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(`'${tabName}'`)) btn.classList.add('active');
+    });
+    if (tabName === 'dashboard') loadDashboard();
+    else if (tabName === 'daily-log') loadDailyLog();
+    else if (tabName === 'reconciliation') loadReconciliation();
+    else if (tabName === 'reports') loadReports();
+    else if (tabName === 'settings') { loadEmployeesDisplay(); loadVendorsDisplay(); loadSettingsDisplay(); }
+    else if (tabName === 'monthly') loadMonthlySettlementForm();
+}
+
+function loadDashboard() {
+    const month = new Date().toISOString().substring(0, 7);
+    const stats = getMonthlyStats(month);
+    document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card"><h4>💰 總營業額</h4><div class="value">NT$ ${stats.totalRevenue.toLocaleString()}</div></div>
+        <div class="stat-card"><h4>📅 營運天數</h4><div class="value">${stats.workingDays}</div></div>
+        <div class="stat-card"><h4>📈 日均營收</h4><div class="value">NT$ ${stats.avgDaily.toLocaleString()}</div></div>
+        <div class="stat-card"><h4>📦 廠商進貨</h4><div class="value">NT$ ${stats.vendorTotal.toLocaleString()}</div></div>
+    `;
+}
+
+function loadDailyLog() {
+    const date = document.getElementById('logDate').value;
+    const log = DB.get('daily_log_' + date, {});
+    vendors = DB.get('vendors', []);
+    const container = document.getElementById('cashInputContainer');
+    if (log.cash?.mode === 'direct') {
+        container.innerHTML = `<div class="form-group card" style="text-align:center;"><label>直接輸入現金總額</label><input type="number" step="any" id="cashDirect" value="${log.cash.direct || ''}" placeholder="輸入總金額" inputmode="decimal" style="font-size:1.5em;padding:15px;max-width:300px;margin:0 auto;"></div>`;
+        container.setAttribute('data-mode', 'direct');
+        document.getElementById('cashDirect').addEventListener('input', calculateCash);
+    } else {
+        container.innerHTML = `
+            <div class="cash-input-grid">
+                <div class="cash-input-group"><label>千鈔</label><input type="number" step="any" id="cash1000" value="${log.cash?.c1000 || ''}" placeholder="張" inputmode="decimal"></div>
+                <div class="cash-input-group"><label>百鈔</label><input type="number" step="any" id="cash100" value="${log.cash?.c100 || ''}" placeholder="張" inputmode="decimal"></div>
+            </div>
+            <div class="cash-input-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="cash-input-group"><label>50元</label><input type="number" step="any" id="cash50" value="${log.cash?.c50 || ''}" placeholder="枚" inputmode="decimal"></div>
+                <div class="cash-input-group"><label>10元</label><input type="number" step="any" id="cash10" value="${log.cash?.c10 || ''}" placeholder="枚/金" inputmode="decimal"></div>
+                <div class="cash-input-group"><label>5元</label><input type="number" step="any" id="cash5" value="${log.cash?.c5 || ''}" placeholder="枚/金" inputmode="decimal"></div>
+            </div>`;
+        container.setAttribute('data-mode', 'count');
+        ['cash1000','cash100','cash50','cash10','cash5'].forEach(f => {
+            const el = document.getElementById(f);
+            if (el) el.addEventListener('input', calculateCash);
+        });
+    }
+    document.getElementById('onlineAmount').value = log.onlineAmount || '';
+    document.getElementById('scanAmount').value = log.scanAmount || '';
+    renderVendorPurchases(date);
+    miscellaneousItems = log.miscellaneous || [];
+    renderMiscTable();
+    calculateCash();
+    calculateOnline();
+    calculateScan();
+}
+
+function toggleDirectCash() {
+    const container = document.getElementById('cashInputContainer');
+    const mode = container.getAttribute('data-mode');
+    if (mode === 'count') {
+        container.setAttribute('data-mode', 'direct');
+        container.innerHTML = `<div class="form-group card" style="text-align:center;"><label>直接輸入現金總額</label><input type="number" step="any" id="cashDirect" placeholder="輸入總金額" inputmode="decimal" style="font-size:1.5em;padding:15px;max-width:300px;margin:0 auto;"></div>`;
+        document.getElementById('cashDirect').addEventListener('input', calculateCash);
+    } else {
+        container.setAttribute('data-mode', 'count');
+        container.innerHTML = `
+            <div class="cash-input-grid">
+                <div class="cash-input-group"><label>千鈔</label><input type="number" step="any" id="cash1000" placeholder="張" inputmode="decimal"></div>
+                <div class="cash-input-group"><label>百鈔</label><input type="number" step="any" id="cash100" placeholder="張" inputmode="decimal"></div>
+            </div>
+            <div class="cash-input-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="cash-input-group"><label>50元</label><input type="number" step="any" id="cash50" placeholder="枚" inputmode="decimal"></div>
+                <div class="cash-input-group"><label>10元</label><input type="number" step="any" id="cash10" placeholder="枚/金" inputmode="decimal"></div>
+                <div class="cash-input-group"><label>5元</label><input type="number" step="any" id="cash5" placeholder="枚/金" inputmode="decimal"></div>
+            </div>`;
+        ['cash1000','cash100','cash50','cash10','cash5'].forEach(f => {
+            const el = document.getElementById(f);
+            if (el) el.addEventListener('input', calculateCash);
+        });
+    }
+    calculateCash();
+}
+
+function calculateCash() {
+    const container = document.getElementById('cashInputContainer');
+    const mode = container.getAttribute('data-mode');
+    const settings = DB.get('settings', {});
+    const mult = settings.cash_multipliers || { c1000: 1000, c100: 100, c50: 5, c10: 1.3333, c5: 1.1111 };
+    const openingCash = settings.opening_cash || 8000;
+    let total = 0;
+    if (mode === 'direct') {
+        total = parseFloat(document.getElementById('cashDirect').value) || 0;
+    } else {
+        total  = (parseFloat(document.getElementById('cash1000').value) || 0) * mult.c1000;
+        total += (parseFloat(document.getElementById('cash100').value) || 0) * mult.c100;
+        total += (parseFloat(document.getElementById('cash50').value) || 0) * mult.c50;
+        total += (parseFloat(document.getElementById('cash10').value) || 0) * mult.c10;
+        total += (parseFloat(document.getElementById('cash5').value) || 0) * mult.c5;
+    }
+    const cashAfterOpening = total - openingCash;
+    document.getElementById('cashTotal').innerText = 'NT$ ' + Math.round(cashAfterOpening).toLocaleString();
+    updateDailyTotal();
+}
+
+function calculateOnline() {
+    const settings = DB.get('settings', {});
+    const rate = settings.fee_rate || 2.4;
+    const amt = parseFloat(document.getElementById('onlineAmount').value) || 0;
+    document.getElementById('onlineActual').textContent = Math.round(amt * (100 - rate) / 100).toLocaleString();
+    updateDailyTotal();
+}
+
+function calculateScan() {
+    const settings = DB.get('settings', {});
+    const rate = settings.fee_rate || 2.4;
+    const amt = parseFloat(document.getElementById('scanAmount').value) || 0;
+    document.getElementById('scanActual').textContent = Math.round(amt * (100 - rate) / 100).toLocaleString();
+    updateDailyTotal();
+}
+
+function updateDailyTotal() {
+    const settings = DB.get('settings', {});
+    const mult = settings.cash_multipliers || { c1000: 1000, c100: 100, c50: 5, c10: 1.3333, c5: 1.1111 };
+    const openingCash = settings.opening_cash || 8000;
+    const rate = settings.fee_rate || 2.4;
+    const container = document.getElementById('cashInputContainer');
+    const mode = container.getAttribute('data-mode');
+    let rawCash = 0;
+    if (mode === 'direct') {
+        rawCash = parseFloat(document.getElementById('cashDirect')?.value) || 0;
+    } else {
+        rawCash  = (parseFloat(document.getElementById('cash1000')?.value) || 0) * mult.c1000;
+        rawCash += (parseFloat(document.getElementById('cash100')?.value) || 0) * mult.c100;
+        rawCash += (parseFloat(document.getElementById('cash50')?.value) || 0) * mult.c50;
+        rawCash += (parseFloat(document.getElementById('cash10')?.value) || 0) * mult.c10;
+        rawCash += (parseFloat(document.getElementById('cash5')?.value) || 0) * mult.c5;
+    }
+    const cash = Math.round(rawCash - openingCash);
+    const online = Math.round((parseFloat(document.getElementById('onlineAmount').value) || 0) * (100 - rate) / 100);
+    const scan = Math.round((parseFloat(document.getElementById('scanAmount').value) || 0) * (100 - rate) / 100);
+    document.getElementById('dailyTotal').textContent = 'NT$ ' + (cash + online + scan).toLocaleString();
+}
+
+function renderVendorPurchases(date) {
+    const container = document.getElementById('vendorPurchasesContainer');
+    container.innerHTML = '';
+    const log = DB.get('daily_log_' + date, {});
+    const purchases = log.purchases || {};
+    vendors.forEach(v => {
+        let content = '';
+        if (v.type === 'items') {
+            v.items.forEach(item => {
+                const val = purchases[v.id]?.[item.name] || '';
+                content += `<div style="display:flex;align-items:center;margin-bottom:5px;"><span style="flex:1;font-size:0.85em;">${item.name}</span><input type="number" step="any" class="vendor-item-input" data-vendor-id="${v.id}" data-item-name="${item.name}" data-price="${item.price}" value="${val}" placeholder="數量 x ${item.price}" inputmode="decimal" style="width:120px;padding:5px;font-size:14px;"></div>`;
+            });
+            const subtotal = calculateVendorSubtotal(v.id, purchases[v.id] || {});
+            content += `<div style="text-align:right;font-size:0.8em;color:#667eea;margin-top:5px;">小計: NT$ <span id="subtotal-${v.id}">${subtotal.toLocaleString()}</span></div>`;
+        } else {
+            const val = purchases[v.id]?.amount || '';
+            content = `<input type="number" step="any" class="vendor-amount-input" data-vendor-id="${v.id}" value="${val}" placeholder="金額" inputmode="decimal" style="width:100%;padding:10px;">`;
+        }
+        container.innerHTML += `<div class="card" style="padding:10px;border-left-color:#764ba2;"><h4 style="font-size:0.9em;margin-bottom:10px;">${v.name}</h4>${content}</div>`;
+    });
+    document.querySelectorAll('.vendor-item-input').forEach(el => {
+        el.addEventListener('input', (e) => updateVendorSubtotal(e.target.getAttribute('data-vendor-id')));
+    });
+}
+
+function calculateVendorSubtotal(vendorId, data) {
+    const v = vendors.find(v => v.id == vendorId);
+    if (!v || v.type !== 'items') return 0;
+    let total = 0;
+    v.items.forEach(item => { total += (parseFloat(data[item.name]) || 0) * item.price; });
+    return Math.round(total);
+}
+
+function updateVendorSubtotal(vendorId) {
+    let total = 0;
+    document.querySelectorAll(`.vendor-item-input[data-vendor-id="${vendorId}"]`).forEach(el => {
+        total += (parseFloat(el.value) || 0) * (parseFloat(el.getAttribute('data-price')) || 0);
+    });
+    const el = document.getElementById(`subtotal-${vendorId}`);
+    if (el) el.innerText = Math.round(total).toLocaleString();
+}
+
+function renderMiscTable() {
+    const tbody = document.querySelector('#miscTable tbody');
+    tbody.innerHTML = '';
+    miscellaneousItems.forEach((item, index) => {
+        tbody.innerHTML += `<tr><td>${item.name}</td><td>NT$ ${item.amount.toLocaleString()}</td><td><button class="btn btn-danger btn-sm" onclick="deleteMiscellaneous(${index})">刪除</button></td></tr>`;
+    });
+}
+
+function addMiscellaneous() {
+    const name = document.getElementById('miscName').value;
+    const amount = parseFloat(document.getElementById('miscAmount').value) || 0;
+    if (name && amount > 0) {
+        miscellaneousItems.push({ name, amount });
+        document.getElementById('miscName').value = '';
+        document.getElementById('miscAmount').value = '';
+        renderMiscTable();
+    }
+}
+
+function deleteMiscellaneous(index) {
+    miscellaneousItems.splice(index, 1);
+    renderMiscTable();
+}
+
+function saveDailyLog() {
+    const date = document.getElementById('logDate').value;
+    const container = document.getElementById('cashInputContainer');
+    const mode = container.getAttribute('data-mode');
+    const cash = { mode };
+    if (mode === 'direct') {
+        cash.direct = parseFloat(document.getElementById('cashDirect').value) || 0;
+    } else {
+        cash.c1000 = parseFloat(document.getElementById('cash1000').value) || 0;
+        cash.c100 = parseFloat(document.getElementById('cash100').value) || 0;
+        cash.c50 = parseFloat(document.getElementById('cash50').value) || 0;
+        cash.c10 = parseFloat(document.getElementById('cash10').value) || 0;
+        cash.c5 = parseFloat(document.getElementById('cash5').value) || 0;
+    }
+    const purchases = {};
+    vendors.forEach(v => {
+        if (v.type === 'items') {
+            purchases[v.id] = {};
+            document.querySelectorAll(`.vendor-item-input[data-vendor-id="${v.id}"]`).forEach(el => {
+                purchases[v.id][el.getAttribute('data-item-name')] = el.value;
+            });
+            purchases[v.id].amount = calculateVendorSubtotal(v.id, purchases[v.id]);
+        } else {
+            const amt = parseFloat(document.querySelector(`.vendor-amount-input[data-vendor-id="${v.id}"]`).value) || 0;
+            purchases[v.id] = { amount: amt };
+        }
+    });
+    const settings = DB.get('settings', {});
+    const mult = settings.cash_multipliers || { c1000: 1000, c100: 100, c50: 5, c10: 1.3333, c5: 1.1111 };
+    let cashTotal = 0;
+    if (mode === 'direct') cashTotal = cash.direct;
+    else cashTotal = (cash.c1000*mult.c1000)+(cash.c100*mult.c100)+(cash.c50*mult.c50)+(cash.c10*mult.c10)+(cash.c5*mult.c5);
+    const log = {
+        cash, cashTotal,
+        onlineAmount: parseFloat(document.getElementById('onlineAmount').value) || 0,
+        onlineActual: parseFloat(document.getElementById('onlineActual').innerText.replace(/,/g,'')) || 0,
+        scanAmount: parseFloat(document.getElementById('scanAmount').value) || 0,
+        scanActual: parseFloat(document.getElementById('scanActual').innerText.replace(/,/g,'')) || 0,
+        dailyTotal: parseFloat(document.getElementById('dailyTotal').innerText.replace(/[^\d.-]/g,'')) || 0,
+        purchases,
+        miscellaneous: miscellaneousItems
+    };
+    DB.set('daily_log_' + date, log);
+    alert('✅ 保存成功！');
+}
+
+function loadReconciliation() {
+    const month = document.getElementById('reconciliationMonth').value;
+    const container = document.getElementById('vendorReconciliationContainer');
+    container.innerHTML = '';
+    vendors.forEach(v => {
+        const dailyKeys = Object.keys(localStorage).filter(k => k.startsWith('wazi_daily_log_' + month)).sort();
+        let total = 0, detailsHtml = '';
+        dailyKeys.forEach(key => {
+            const date = key.replace('wazi_daily_log_', '');
+            const log = DB.get('daily_log_' + date, {});
+            const amt = log.purchases?.[v.id]?.amount || 0;
+            if (amt > 0) {
+                total += amt;
+                detailsHtml += `<div style="display:flex;justify-content:space-between;font-size:0.85em;padding:5px 0;border-bottom:1px dashed #eee;"><span>${date.substring(8)}日</span><span>NT$ ${amt.toLocaleString()}</span></div>`;
+            }
+        });
+        if (total > 0) {
+            container.innerHTML += `<div class="card" style="border-left-color:#764ba2;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><h4 style="margin:0;">${v.name}</h4><strong style="color:#764ba2;">總計: NT$ ${total.toLocaleString()}</strong></div><div class="collapse-btn" onclick="toggleCollapse('recon-${v.id}')" style="padding:5px;font-size:0.8em;">查看明細 <span>▼</span></div><div id="recon-${v.id}" class="collapse-content">${detailsHtml}</div></div>`;
+        }
+    });
+}
+
+function loadMonthlySettlementForm() {
+    const month = document.getElementById('settlementMonth').value;
+    const settlement = DB.get('monthly_settlement_' + month, {});
+    const settings = DB.get('settings', {});
+    let html = `<div class="card"><h4>👥 員工工時</h4><div class="grid">`;
+    employees.forEach(emp => {
+        const val = settlement.staffHours?.[emp.id] || '';
+        html += `<div class="form-group"><label>${emp.name}</label><input type="number" step="any" class="staff-hour" data-id="${emp.id}" value="${val}" placeholder="小時" inputmode="decimal"></div>`;
+    });
+    html += `</div></div>
+        <div class="card"><h4>⚡ 能源度數 (本月輸入)</h4><div class="grid">
+            <div class="form-group"><label>水費度數</label><input type="number" step="any" id="settle-water" value="${settlement.water || ''}" placeholder="度" inputmode="decimal"></div>
+            <div class="form-group"><label>瓦斯度數</label><input type="number" step="any" id="settle-gas" value="${settlement.gas || ''}" placeholder="度" inputmode="decimal"></div>
+            <div class="form-group"><label>電費 110V</label><input type="number" step="any" id="settle-e110" value="${settlement.e110 || ''}" placeholder="度" inputmode="decimal"></div>
+            <div class="form-group"><label>電費 220V</label><input type="number" step="any" id="settle-e220" value="${settlement.e220 || ''}" placeholder="度" inputmode="decimal"></div>
+        </div></div>
+        <div class="card"><h4>🏠 固定支出</h4><div class="grid">
+            <div class="form-group"><label>店面租金</label><input type="number" step="any" id="settle-rent" value="${settlement.rent || settings.default_rent || 50000}" inputmode="decimal"></div>
+            <div class="form-group"><label>公攤費用 (×0.75)</label><input type="number" step="any" id="settle-public" value="${settlement.publicFeeRaw || ''}" placeholder="輸入原始金額" inputmode="decimal"></div>
+            <div class="form-group"><label>營業稅 (輸入金額)</label><input type="number" step="any" id="settle-tax" value="${settlement.tax || ''}" placeholder="輸入金額" inputmode="decimal"></div>
+        </div></div>
+        <button class="btn btn-success" style="width:100%;padding:15px;" onclick="saveMonthlySettlement()">💾 保存月結算</button>`;
+    document.getElementById('staffHoursContainer').innerHTML = html;
+}
+
+function saveMonthlySettlement() {
+    const month = document.getElementById('settlementMonth').value;
+    const settings = DB.get('settings', {});
+    const staffHours = {};
+    document.querySelectorAll('.staff-hour').forEach(el => {
+        staffHours[el.getAttribute('data-id')] = parseFloat(el.value) || 0;
+    });
+    const water = parseFloat(document.getElementById('settle-water').value) || 0;
+    const gas = parseFloat(document.getElementById('settle-gas').value) || 0;
+    const e110 = parseFloat(document.getElementById('settle-e110').value) || 0;
+    const e220 = parseFloat(document.getElementById('settle-e220').value) || 0;
+    const rent = parseFloat(document.getElementById('settle-rent').value) || 0;
+    const publicFeeRaw = parseFloat(document.getElementById('settle-public').value) || 0;
+    const publicFee = Math.round(publicFeeRaw * 0.75);
+    const tax = parseFloat(document.getElementById('settle-tax').value) || 0;
+    const settlement = {
+        staffHours, water, gas, e110, e220, rent,
+        publicFeeRaw, publicFee, tax,
+        start_degrees: { water: settings.water_start, e110: settings.electric110_start, e220: settings.electric220_start, gas: settings.gas_start }
+    };
+    DB.set('monthly_settlement_' + month, settlement);
+    if (water > 0) settings.water_start = water;
+    if (e110 > 0) settings.electric110_start = e110;
+    if (e220 > 0) settings.electric220_start = e220;
+    if (gas > 0) settings.gas_start = gas;
+    DB.set('settings', settings);
+    alert('✅ 結算成功！目前度數已自動更新為下月起始度數。');
+}
+
+function getMonthlyStats(month) {
+    const dailyKeys = Object.keys(localStorage).filter(k => k.startsWith('wazi_daily_log_' + month));
+    const settings = DB.get('settings', {});
+    const openingCash = settings.opening_cash || 8000;
+    let totalRevenue = 0, workingDays = 0, totalCashNet = 0, vendorTotal = 0, miscTotal = 0;
+    dailyKeys.forEach(key => {
+        const log = DB.get(key.replace('wazi_', ''), {});
+        if (log.dailyTotal !== undefined) {
+            totalRevenue += log.dailyTotal;
+            workingDays++;
+            totalCashNet += (log.cashTotal - openingCash);
+        }
+        if (log.purchases) Object.values(log.purchases).forEach(p => { vendorTotal += p.amount || 0; });
+        (log.miscellaneous || []).forEach(i => { miscTotal += i.amount || 0; });
+    });
+    return { totalRevenue, vendorTotal, miscTotal, workingDays, avgDaily: workingDays > 0 ? Math.round(totalRevenue / workingDays) : 0, totalCashNet };
+}
+
+function loadReports() {
+    const month = document.getElementById('reportMonth').value;
+    const stats = getMonthlyStats(month);
+    const settlement = DB.get('monthly_settlement_' + month, {});
+    const settings = DB.get('settings', {});
+
+    // 薪資計算：工時 × 時薪 × 1.0004
+    let totalSalary = 0;
+    const salaryRows = employees.map(emp => {
+        const hours = settlement.staffHours?.[emp.id] || 0;
+        const salary = Math.round(hours * emp.hourly_rate * 1.0004);
+        totalSalary += salary;
+        return `<div style="display:flex;justify-content:space-between;font-size:0.85em;padding:4px 0;border-bottom:1px dashed #eee;"><span>${emp.name} (${hours}h × ${emp.hourly_rate})</span><span>NT$ ${salary.toLocaleString()}</span></div>`;
+    }).join('');
+
+    const rent = settlement.rent || settings.default_rent || 0;
+    const publicFee = settlement.publicFee || 0;
+    const publicFeeRaw = settlement.publicFeeRaw || 0;
+    const tax = settlement.tax || 0;
+    const totalFixed = rent + publicFee + tax;
+    const totalExpense = totalSalary + stats.vendorTotal + stats.miscTotal + totalFixed;
+    const netProfit = stats.totalRevenue - totalExpense;
+
+    document.getElementById('reportStats').innerHTML = `
+        <div class="card" style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;margin-bottom:15px;">
+            <h3 style="margin-bottom:15px;color:white;">📊 ${month} 營運概況</h3>
+            <div class="grid" style="gap:10px;">
+                <div><small>總營業額</small><br><strong>NT$ ${stats.totalRevenue.toLocaleString()}</strong></div>
+                <div><small>日均營收</small><br><strong>NT$ ${stats.avgDaily.toLocaleString()}</strong></div>
+                <div><small>現金淨額</small><br><strong>NT$ ${stats.totalCashNet.toLocaleString()}</strong></div>
+                <div><small>營運天數</small><br><strong>${stats.workingDays} 天</strong></div>
+            </div>
+        </div>
+        <div class="card" style="border-left-color:#51cf66;">
+            <h4>👥 員工薪資 (工時 × 時薪 × 1.0004)</h4>
+            ${salaryRows || '<div style="color:#999;text-align:center;">尚未輸入工時</div>'}
+            <div style="text-align:right;font-weight:bold;margin-top:8px;color:#51cf66;">薪資合計: NT$ ${totalSalary.toLocaleString()}</div>
+        </div>
+        <div class="card" style="border-left-color:#764ba2;">
+            <h4>📦 廠商進貨</h4>
+            <div style="text-align:right;font-weight:bold;color:#764ba2;">NT$ ${stats.vendorTotal.toLocaleString()}</div>
+        </div>
+        <div class="card" style="border-left-color:#ff6b6b;">
+            <h4>🖍️ 雜支</h4>
+            <div style="text-align:right;font-weight:bold;color:#ff6b6b;">NT$ ${stats.miscTotal.toLocaleString()}</div>
+        </div>
+        <div class="card" style="border-left-color:#ffa94d;">
+            <h4>🏠 固定支出</h4>
+            <div style="display:flex;justify-content:space-between;font-size:0.85em;padding:4px 0;border-bottom:1px dashed #eee;"><span>店面租金</span><span>NT$ ${rent.toLocaleString()}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85em;padding:4px 0;border-bottom:1px dashed #eee;"><span>公攤費用 (${publicFeeRaw.toLocaleString()} × 0.75)</span><span>NT$ ${publicFee.toLocaleString()}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85em;padding:4px 0;border-bottom:1px dashed #eee;"><span>營業稅</span><span>NT$ ${tax.toLocaleString()}</span></div>
+            <div style="text-align:right;font-weight:bold;margin-top:8px;color:#ffa94d;">固定支出合計: NT$ ${totalFixed.toLocaleString()}</div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,${netProfit >= 0 ? '#51cf66,#2d6a4f' : '#ff6b6b,#c0392b'});">
+            <h4>💹 本月淨利潤</h4>
+            <div class="value">NT$ ${netProfit.toLocaleString()}</div>
+            <div style="font-size:0.8em;margin-top:5px;opacity:0.85;">營業額 ${stats.totalRevenue.toLocaleString()} - 總支出 ${totalExpense.toLocaleString()}</div>
+        </div>`;
+}
+
+function loadEmployeesDisplay() {
+    const container = document.getElementById('employeesContainer');
+    container.innerHTML = '';
+    employees.forEach(emp => {
+        container.innerHTML += `<div class="card" style="margin-bottom:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;"><div><strong>${emp.name}</strong> (時薪: ${emp.hourly_rate}, 獎金: ${emp.bonus_rate}%)</div><button class="btn btn-danger btn-sm" onclick="deleteEmployee(${emp.id})">刪除</button></div>`;
+    });
+}
+
+function showAddEmployeeForm() {
+    const form = document.getElementById('addEmployeeForm');
+    if (form) form.classList.toggle('hidden');
+}
+
+function addEmployee() {
+    const name = document.getElementById('newEmpName').value;
+    const rate = parseFloat(document.getElementById('newEmpRate').value) || 0;
+    const bonus = parseFloat(document.getElementById('newEmpBonus').value) || 0;
+    if (name && rate > 0) {
+        const nextId = DB.get('nextEmpId', 100);
+        employees.push({ id: nextId, name, hourly_rate: rate, bonus_rate: bonus });
+        DB.set('employees', employees);
+        DB.set('nextEmpId', nextId + 1);
+        loadEmployeesDisplay();
+        document.getElementById('newEmpName').value = '';
+        document.getElementById('newEmpRate').value = '';
+        document.getElementById('newEmpBonus').value = '';
+    }
+}
+
+function deleteEmployee(id) {
+    if (confirm('確定要刪除嗎？')) {
+        employees = employees.filter(e => e.id !== id);
+        DB.set('employees', employees);
+        loadEmployeesDisplay();
+    }
+}
+
+function loadVendorsDisplay() {
+    const container = document.getElementById('vendorListContainer');
+    container.innerHTML = '';
+    vendors.forEach(v => {
+        container.innerHTML += `<div class="card" style="margin-bottom:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;"><div><strong>${v.name}</strong> (${v.type === 'items' ? '品項模式' : '金額模式'})</div><button class="btn btn-danger btn-sm" onclick="deleteVendor(${v.id})">刪除</button></div>`;
+    });
+}
+
+function showAddVendorForm() {
+    const form = document.getElementById('addVendorForm');
+    if (form) form.classList.toggle('hidden');
+}
+
+function addVendor() {
+    const name = document.getElementById('newVendorName').value;
+    const type = document.getElementById('newVendorType').value;
+    if (name) {
+        const nextId = DB.get('nextVendorId', 100);
+        vendors.push({ id: nextId, name, type, items: type === 'items' ? [] : undefined });
+        DB.set('vendors', vendors);
+        DB.set('nextVendorId', nextId + 1);
+        loadVendorsDisplay();
+        document.getElementById('newVendorName').value = '';
+    }
+}
+
+function deleteVendor(id) {
+    if (confirm('確定要刪除嗎？')) {
+        vendors = vendors.filter(v => v.id !== id);
+        DB.set('vendors', vendors);
+        loadVendorsDisplay();
+    }
+}
+
+function loadSettingsDisplay() {
+    const settings = DB.get('settings', {});
+    document.getElementById('set-water-start').value = settings.water_start || '';
+    document.getElementById('set-e110-start').value = settings.electric110_start || '';
+    document.getElementById('set-e220-start').value = settings.electric220_start || '';
+    document.getElementById('set-gas-start').value = settings.gas_start || '';
+    document.getElementById('set-fee-rate').value = settings.fee_rate || 2.4;
+    document.getElementById('set-opening-cash').value = settings.opening_cash || 8000;
+}
+
+function saveSettings() {
+    const settings = DB.get('settings', {});
+    settings.water_start = parseFloat(document.getElementById('set-water-start').value) || 0;
+    settings.electric110_start = parseFloat(document.getElementById('set-e110-start').value) || 0;
+    settings.electric220_start = parseFloat(document.getElementById('set-e220-start').value) || 0;
+    settings.gas_start = parseFloat(document.getElementById('set-gas-start').value) || 0;
+    settings.fee_rate = parseFloat(document.getElementById('set-fee-rate').value) || 2.4;
+    settings.opening_cash = parseFloat(document.getElementById('set-opening-cash').value) || 8000;
+    DB.set('settings', settings);
+    alert('✅ 設定已保存');
+}
+
+function toggleCollapse(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active');
+}
+
+function exportData() {
+    const data = {};
+    Object.keys(localStorage).forEach(k => { if (k.startsWith('wazi_')) data[k] = localStorage.getItem(k); });
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `wazi_backup_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+}
+
+function importData() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                Object.keys(data).forEach(k => localStorage.setItem(k, data[k]));
+                alert('✅ 匯入成功，頁面即將刷新');
+                location.reload();
+            } catch { alert('❌ 匯入失敗，請檢查檔案格式'); }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
+function clearHistory() {
+    const settings = DB.get('settings', {});
+    const pw = prompt('請輸入管理密碼以清理歷史帳目：');
+    if (pw === (settings.password || '1031')) {
+        if (confirm('確定要清理所有歷史帳目嗎？(將保留員工、廠商與度數設定)')) {
+            Object.keys(localStorage).forEach(k => {
+                if (k.startsWith('wazi_daily_log_') || k.startsWith('wazi_monthly_settlement_')) localStorage.removeItem(k);
+            });
+            alert('✅ 歷史帳目已清理');
+            location.reload();
+        }
+    } else {
+        alert('❌ 密碼錯誤');
+    }
+}
+</script>
+
 </body>
 </html>
